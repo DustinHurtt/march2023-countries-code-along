@@ -28,9 +28,3 @@ const userSchema = new Schema(
 
 module.exports = model("User", userSchema)
 
-
-fullName,
-location,
-age,
-profilePic,
-visitedCountries
