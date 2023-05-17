@@ -1,63 +1,60 @@
-// src/context/auth.context.js
+import { useEffect, createContext, useContext } from "react";
 
-import { useState, useEffect, createContext } from "react";
-import axios from "axios";
-const API_URL = "http://localhost:4000";
+import { LoadingContext } from "./loading.context";
+
+import { get } from '../services/authService'
+
 
 const AuthContext = createContext();
 
 function AuthProvider({ children }) {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [user, setUser] = useState(null);
 
-  const storeToken = (token) => {       //  <==  ADD
+  const { setIsLoading, setUser } = useContext(LoadingContext)
+
+  const storeToken = (token) => {       
     localStorage.setItem('authToken', token);
   }
 
-  const removeToken = () => {                    // <== ADD
-    // Upon logout, remove the token from the localStorage
+  const removeToken = () => {                   
+
     localStorage.removeItem("authToken");
   }
 
-  const authenticateUser = () => {           //  <==  ADD  
+  const authenticateUser = () => {          
     // Get the stored token from the localStorage
     const storedToken = localStorage.getItem('authToken');
     
     // If the token exists in the localStorage
     if (storedToken) {
       // We must send the JWT token in the request's "Authorization" Headers
-      axios.get(
-        `${API_URL}/auth/verify`, 
-        { headers: { Authorization: `Bearer ${storedToken}`} }
-      )
+      get('/auth/verify')    
       .then((response) => {
         console.log("user", response.data)
         // If the server verifies that the JWT token is valid  
         const user = response.data;
        // Update state variables        
-        setIsLoggedIn(true);
+
         setIsLoading(false);
         setUser(user);        
       })
       .catch((error) => {
         // If the server sends an error response (invalid token) 
         // Update state variables         
-        setIsLoggedIn(false);
+
         setIsLoading(false);
         setUser(null);
         removeToken();    
       });      
     } else {
       // If the token is not available (or is removed)
-        setIsLoggedIn(false);
+
         setIsLoading(false);
         setUser(null);      
     }   
   }
 
   
-  const logOutUser = () => {                   // <== ADD    
+  const logOutUser = () => {                  
     // To log out the user, remove the token
     removeToken();
     // and update the state variables    
@@ -65,16 +62,13 @@ function AuthProvider({ children }) {
   }  
   
   useEffect(() => {                                    
-    authenticateUser();                   //  <==  ADD
+    authenticateUser();                  
    }, []);
   
-  /* 
-    Functions for handling the authentication status (isLoggedIn, isLoading, user)
-    will be added here later in the next step
-  */
+
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, isLoading, user, storeToken, authenticateUser, logOutUser }}>
+    <AuthContext.Provider value={{ storeToken, authenticateUser, logOutUser }}>
       {children}
     </AuthContext.Provider>
   )
