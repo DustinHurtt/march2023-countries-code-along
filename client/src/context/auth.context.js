@@ -1,5 +1,7 @@
 import { useEffect, createContext, useContext } from "react";
 
+import { useNavigate } from 'react-router-dom'
+
 import { LoadingContext } from "./loading.context";
 
 import { get } from '../services/authService'
@@ -10,6 +12,8 @@ const AuthContext = createContext();
 function AuthProvider({ children }) {
 
   const { setIsLoading, setUser } = useContext(LoadingContext)
+
+  const navigate = useNavigate()
 
   const storeToken = (token) => {       
     localStorage.setItem('authToken', token);
@@ -59,6 +63,8 @@ function AuthProvider({ children }) {
     removeToken();
     // and update the state variables    
     authenticateUser();
+
+    navigate('/')
   }  
   
   useEffect(() => {                                    
