@@ -19,7 +19,9 @@ router.get('/details/:id', (req, res, next) => {
 router.post('/update/:id', (req, res, next) => {
 
   User.findByIdAndUpdate(req.params.id, req.body, {new: true})
+    .populate('visitedCountries')
     .then((updatedUser) => {
+      
       res.json(updatedUser)
     })
     .catch((err) => {
