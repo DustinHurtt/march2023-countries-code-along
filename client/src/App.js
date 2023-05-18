@@ -13,6 +13,7 @@ import Signup from './pages/Signup';
 import Login from './pages/Login';
 import Profile from './pages/Profile';
 import AddPost from './pages/AddPost';
+import ProfileUpdate from './pages/ProfileUpdate';
 
 function App() {
 
@@ -56,6 +57,7 @@ function App() {
         <Route element={<LoggedIn />}>
 
           <Route path='/profile' element={<Profile />} />
+          <Route path='/profile/:id' element={<ProfileUpdate />} />
           <Route path='/add-post' element={<AddPost />} />
 
         </Route>

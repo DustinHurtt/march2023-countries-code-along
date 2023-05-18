@@ -15,7 +15,10 @@ const Signup = () => {
 
     const [newUser, setNewUser] = useState({
         email: "",
-        password: ""
+        password: "",
+        fullName: "",
+        location: "",
+        age: 0
     })
 
     const navigate = useNavigate()
@@ -31,7 +34,7 @@ const Signup = () => {
             .then((results) => {
                 console.log("Signup", results.data)
                 storeToken(results.data.authToken)
-                setUser(results.data.user)
+                setUser({...results.data.user, fullName: '', location: '', age: '' })
                 navigate('/profile')
             })
             .catch((err) => {
@@ -59,5 +62,7 @@ const Signup = () => {
     </div>
   )
 }
+
+
 
 export default Signup

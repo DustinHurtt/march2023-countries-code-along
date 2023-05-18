@@ -41,10 +41,10 @@ router.post('/signup', (req, res, next) => {
       .then((createdUser) => {
         // Deconstruct the newly created user object to omit the password
         // We should never expose passwords publicly
-        const { email, _id } = createdUser;
+        const { email, _id, profilePic } = createdUser;
       
         // Create a new object that doesn't expose the password
-        const payload = { email, _id };
+        const payload = { email, _id, profilePic, fullName: '', location: '', age: 0 };
    
         // Send a json response containing the user object
 
@@ -53,6 +53,8 @@ router.post('/signup', (req, res, next) => {
             process.env.SECRET,
             { algorithm: 'HS256', expiresIn: "6h" }
           );
+
+        console.log("Signup line 57", payload)
    
         res.status(201).json( { authToken: authToken, user: payload });
       })
