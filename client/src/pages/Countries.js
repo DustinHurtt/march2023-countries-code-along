@@ -1,17 +1,30 @@
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { LoadingContext } from '../context/loading.context'
 
+import { getImage } from '../services/countries'
+
 
 const Countries = () => {
 
-    const { countries, getCountries } = useContext(LoadingContext)
+    const { countries, getCountries } = useContext(LoadingContext);
 
-    const getImage = (code) => {
-        return `https://flagpedia.net/data/flags/icon/72x54/${code.toLowerCase()}.png`
+    const [searchTerm, setSearchTerm] = useState('')
+
+    const sort = (array) => {
+        return array.sort((a,b) => a.name.common.localeCompare(b.name.common))
     }
 
+    let searched = (array) => {
+        return searchTerm ? 
+
+        array.filter((element) => element.name.common.toLowerCase().includes(searchTerm.toLocaleLowerCase()))
+
+        : 
+
+        array
+    }
 
     useEffect(() => {
 
@@ -25,15 +38,24 @@ const Countries = () => {
   return (
     <div>
         <h1>Countries</h1>
+
+        <div id='country-search'>
+
+            <label>Find Country</label>
+            <input type='text' name="searchTerm" value={searchTerm} onChange={(e)=> setSearchTerm(e.target.value)}/>
+
+        </div>
+
+
         {
             countries.length ?
 
             <>
 
                 {
-                    countries.sort((a, b) => a.name.common.localeCompare(b.name.common)).map((country) => {
+                    searched(sort(countries)).map((country) => {
                         return (
-                            <Link>
+                            <Link to={`/country/${country._id}`} key={country._id}>
                                 <div>
                                     <img src={getImage(country.alpha2Code)} alt='country'/>
                                     <h3>{country.name.common}</h3>

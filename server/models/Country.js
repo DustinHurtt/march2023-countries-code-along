@@ -5,10 +5,12 @@ const countrySchema = new Schema(
         commonName: String,
         officialName: String,
         capital: String,
-        currency: String,
+        region: String,
+        currencies: [Object],
         languages: [String],
         flag: String,
-        coordinates: [Number]
+        coordinates: [Number],
+        country_id: String
     },
     {
         timestamps: true,

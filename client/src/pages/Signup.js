@@ -46,7 +46,9 @@ const Signup = () => {
   return (
 
 
-    <div>
+    <div id='auth-landing'>
+
+        <h1>Signup</h1>
     
         <form onSubmit={handleSubmit}>
 
@@ -54,7 +56,7 @@ const Signup = () => {
             <input type="text" name="email" value={newUser.email} onChange={handleChange} />
 
             <label>password</label>
-            <input type="text" name="password" value={newUser.password} onChange={handleChange} />
+            <input type="password" name="password" value={newUser.password} onChange={handleChange} />
 
 
             <button type="submit">Signup</button>

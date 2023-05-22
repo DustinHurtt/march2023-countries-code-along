@@ -36,33 +36,89 @@ router.post('/signup', (req, res, next) => {
    
         // Create a new user in the database
         // We return a pending promise, which allows us to chain another `then` 
-        return User.create({ email, password: hashedPassword });
-      })
-      .then((createdUser) => {
-        // Deconstruct the newly created user object to omit the password
-        // We should never expose passwords publicly
-        const { email, _id, profilePic } = createdUser;
-      
-        // Create a new object that doesn't expose the password
-        const payload = { email, _id, profilePic, fullName: '', location: '', age: 0 };
-   
-        // Send a json response containing the user object
+        User.create({ email, password: hashedPassword })
 
-        const authToken = jwt.sign( 
-            payload,
-            process.env.SECRET,
-            { algorithm: 'HS256', expiresIn: "6h" }
-          );
-
-        console.log("Signup line 57", payload)
-   
-        res.status(201).json( { authToken: authToken, user: payload });
+            .then((createdUser) => {
+            // Deconstruct the newly created user object to omit the password
+            // We should never expose passwords publicly
+            const { email, _id, profilePic } = createdUser;
+            
+            // Create a new object that doesn't expose the password
+            const payload = { email, _id, profilePic, fullName: '', location: '', age: 0, visitedCountries: []};
+        
+            // Send a json response containing the user object
+    
+            const authToken = jwt.sign( 
+                payload,
+                process.env.SECRET,
+                { algorithm: 'HS256', expiresIn: "6h" }
+                );
+    
+            console.log("Signup line 57", payload)
+        
+            res.status(201).json( { authToken: authToken, user: payload });
+            })
+            .catch(err => {
+            console.log(err);
+            res.status(500).json({ message: "Internal Server Error" })
+            });
       })
-      .catch(err => {
-        console.log(err);
-        res.status(500).json({ message: "Internal Server Error" })
-      });
+      .catch((err) => {
+        console.log("line67")
+        console.log(err)
+      })
   });
+// router.post('/signup', (req, res, next) => {
+//     const { email, password } = req.body;
+   
+//     // Check if the email or password or name is provided as an empty string 
+//     if (email === '' || password === '' ) {
+//       res.status(400).json({ message: "Provide email, password and name" });
+//       return;
+//     }
+      
+//     // Check the users collection if a user with the same email already exists
+//     User.findOne({ email })
+//       .then((foundUser) => {
+//         // If the user with the same email already exists, send an error response
+//         if (foundUser) {
+//           res.status(400).json({ message: "User already exists." });
+//           return;
+//         }
+   
+//         // If the email is unique, proceed to hash the password
+//         const salt = bcrypt.genSaltSync(saltRounds);
+//         const hashedPassword = bcrypt.hashSync(password, salt);
+   
+//         // Create a new user in the database
+//         // We return a pending promise, which allows us to chain another `then` 
+//         return User.create({ email, password: hashedPassword });
+//       })
+//       .then((createdUser) => {
+//         // Deconstruct the newly created user object to omit the password
+//         // We should never expose passwords publicly
+//         const { email, _id, profilePic } = createdUser;
+      
+//         // Create a new object that doesn't expose the password
+//         const payload = { email, _id, profilePic, fullName: '', location: '', age: 0 };
+   
+//         // Send a json response containing the user object
+
+//         const authToken = jwt.sign( 
+//             payload,
+//             process.env.SECRET,
+//             { algorithm: 'HS256', expiresIn: "6h" }
+//           );
+
+//         console.log("Signup line 57", payload)
+   
+//         res.status(201).json( { authToken: authToken, user: payload });
+//       })
+//       .catch(err => {
+//         console.log(err);
+//         res.status(500).json({ message: "Internal Server Error" })
+//       });
+//   });
    
 
 // POST  /auth/login

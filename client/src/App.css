@@ -27,3 +27,90 @@ form {
   align-items: center;
 
 }
+
+#country-search {
+  margin-bottom: 5vh;
+}
+
+#country-search label {
+  margin-right: 2vw;
+}
+
+#country {
+  margin-top: 5vh;
+}
+
+#country-details {
+  margin-top: 2vh;
+}
+
+#map-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 5vh;
+}
+
+#map {
+  width: 70%;
+  height: unset;
+  aspect-ratio: 16 / 9;
+}
+
+#marker {
+  background-color: none;
+}
+
+#profile-image {
+  height: 30vh;
+}
+
+#auth-landing {
+  height: 70vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#auth-landing button {
+  margin-top: 2vh;
+}
+
+#like {
+  height: 5vh
+}
+
+#selector {
+  width: 25vw;
+}
+
+#all-posts {
+  width: 98vw;
+  flex-direction: column;
+  align-items: center;
+}
+
+#all-posts-container {
+  width: 50%;
+  flex-direction: column;
+  align-items: flex-end;
+  margin: auto;
+}
+
+#all-posts-link {
+  margin: 1vh 1vh;
+  padding: 0;
+  width: 50%;
+  margin: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  align-self: center;
+}
+
+#all-posts-link img {
+  height: 15vh
+}

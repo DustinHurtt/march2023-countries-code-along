@@ -8,16 +8,19 @@ import { AuthContext } from '../context/auth.context'
 
 import { post } from '../services/authService'
 
+import { fileChange } from '../services/fileChange'
+
 
 const ProfileUpdate = () => {
 
-    const { user, setUser } = useContext(LoadingContext)
+    const { user, setUser, buttonDisabled, setButtonDisabled } = useContext(LoadingContext)
 
     const { storeToken } = useContext(AuthContext)
 
     const navigate = useNavigate()
 
     const [updatedUser, setUpdatedUser] = useState(null)
+    // const [buttonDisabled, setButtonDisabled] = useState(false)
 
     const handleTextChange = (e) => {
         setUpdatedUser((prev) => ({...prev, [e.target.name]: e.target.value}))
@@ -27,7 +30,26 @@ const ProfileUpdate = () => {
         setUpdatedUser((prev) => ({...prev, [e.target.name]: Number(e.target.value)}))
     }
 
+    const handleFileChange = (e) => {
+
+        setButtonDisabled(true)
+
+        fileChange(e)
+          .then((response) => {
+            console.log(response.data);
+            setUpdatedUser((prev) => ({...prev, [e.target.name]: response.data.image}));
+            setButtonDisabled(false);
+          })
+          .catch((err) => {
+            setButtonDisabled(false);
+            console.log("Error while uploading the file: ", err);
+          });
+
+    }
+
+
     const handleSubmit = (e) => {
+
         e.preventDefault()
 
         post(`/users/update/${user._id}`, updatedUser)
@@ -59,7 +81,7 @@ const ProfileUpdate = () => {
         {
             updatedUser ? 
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} >
 
             <label htmlFor="fullName" >Full Name</label>
             <input id="fullName" name='fullName' type="text" value={updatedUser.fullName} onChange={handleTextChange} />
@@ -71,9 +93,9 @@ const ProfileUpdate = () => {
             <input id="age" name="age" type="number" value={updatedUser.age} onChange={handleNumberChange} />
 
             <label htmlFor="profilePic" >Profile Picture</label>
-            <input id="profilePic" name='profilePic' type="text" value={updatedUser.profilePic} onChange={handleTextChange} />
+            <input id="profilePic" name='profilePic' type="file" onChange={handleFileChange} />
 
-            <button type='submit'>Update Profile</button>
+            <button type='submit' disabled={buttonDisabled}>Update Profile</button>
 
         </form>
 

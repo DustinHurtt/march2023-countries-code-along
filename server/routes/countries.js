@@ -7,38 +7,57 @@ const User = require('../models/User')
 const isAuthenticated = require('../middleware/isAuthenticated')
 
 
-router.post('/create', isAuthenticated, (req, res, next) => {
+router.post("/create", isAuthenticated, (req, res, next) => {
+  console.log("req body", req.body);
 
-    Country.find({commonName: req.body.commonName})
-        .then((foundCountry) => {
-            if (!foundCountry) {
+  Country.findOne({ country_id: req.body.country_id })
+    .then((foundCountry) => {
+      console.log("line 17");
+      console.log("founD COUNTRY", foundCountry);
 
-                Country.create(req.body)
-                    .then((createdCountry) => {
+      if (foundCountry) {
+        User.findByIdAndUpdate(
+          req.user._id,
+          {
+            $addToSet: { visitedCountries: foundCountry._id },
+          },
+          { new: true }
+        )
+        .populate('visitedCountries')
+          .then((updatedUser) => {
+            res.json(updatedUser);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
 
-                        User.findByIdAndUpdate(req.user._id, {
-                            $push: {visitedCountries: createdCountry._id}
-                        })
+        return;
+      }
 
-                        res.json(createdCountry)
-                    })
-                    .catch((err) => {
-                        console.log(err)
-                    })
-            }
+      console.log("No Found Country");
 
-            
-            User.findByIdAndUpdate(req.user._id, {
-                $push: {visitedCountries: foundCountry._id}
-            })
-
-            res.json(foundCountry)
-        })
-        .catch((err) => {
-            console.log(err)
-        })
-
-})
+      Country.create(req.body)
+      .then((createdCountry) => {
+        User.findByIdAndUpdate(
+          req.user._id,
+          {
+            $push: { visitedCountries: createdCountry._id },
+          },
+          { new: true }
+        )
+        .populate('visitedCountries')
+          .then((updatedUser) => {
+            res.json(updatedUser);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
 
 router.get('/detail/:name', (req, res, next) => {
     Country.find({commonName: req.params.name})

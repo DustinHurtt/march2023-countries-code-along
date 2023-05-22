@@ -43,7 +43,9 @@ const Login = () => {
   return (
 
 
-    <div>
+    <div id="auth-landing">
+
+        <h1>Login</h1>
     
         <form onSubmit={handleSubmit}>
 
@@ -51,7 +53,7 @@ const Login = () => {
             <input type="text" name="email" value={thisUser.email} onChange={handleChange} />
 
             <label>password</label>
-            <input type="text" name="password" value={thisUser.password} onChange={handleChange} />
+            <input type="password" name="password" value={thisUser.password} onChange={handleChange} />
 
 
             <button type="submit">Login</button>

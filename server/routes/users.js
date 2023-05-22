@@ -2,7 +2,10 @@ var express = require('express');
 var router = express.Router();
 const jwt = require("jsonwebtoken");
 
+const fileUploader = require("../middleware/cloudinary")
+
 const User = require('../models/User')
+const Post = require('../models/Post')
 
 router.get('/details/:id', (req, res, next) => {
 
@@ -17,11 +20,9 @@ router.get('/details/:id', (req, res, next) => {
 
 })
 
-router.post('/update/:id', (req, res, next) => {
+router.post('/update/:id', fileUploader.single("profilePic"), (req, res, next) => {
 
-  console.log("Body", req.body)
-
-  User.findByIdAndUpdate(req.params.id, req.body, {new: true})
+  User.findByIdAndUpdate(req.params.id, req.body,{new: true})
     .populate('visitedCountries')
     .then((updatedUser) => {
 
@@ -41,6 +42,29 @@ router.post('/update/:id', (req, res, next) => {
           res.status(200).json({ authToken: authToken, user: payload });
     })
     .catch((err) => {
+      console.log(err)
+    })
+
+})
+
+router.post('/imageUpload', fileUploader.single("image"), (req, res, next) => {
+  
+  if (!req.file) {
+    next(new Error("No file uploaded!"));
+    return;
+  }
+  console.log("this is file", req.file)
+  res.json({ image: req.file.path });
+  
+})
+
+router.get('/posts/:id', (req, res, next) => {
+
+  Post.find({author: req.params.id})
+    .then((foundPosts) => {
+      res.json(foundPosts)
+    })
+    .catcj((err) => {
       console.log(err)
     })
 
