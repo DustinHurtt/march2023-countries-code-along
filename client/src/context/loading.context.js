@@ -12,7 +12,8 @@ const LoadingProvider = ({ children }) => {
     const [country, setCountry] = useState(null)
     const [buttonDisabled, setButtonDisabled] = useState(false)
     const [posts, setPosts] = useState([])
-    const [userPosts, setUserPosts] = useState(null)
+    const [userPosts, setUserPosts] = useState([])
+    const [singlePost, setSinglePost] = useState(null)
 
     const getCountries = () => {
 
@@ -47,10 +48,35 @@ const LoadingProvider = ({ children }) => {
     }
 
     const getUserPosts = (id) => {
+        get(`/posts/user-posts/${id}`)
+            .then((results) => {
+                console.log("user posts:", results.data)
+                setUserPosts(results.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
+
+    const getSinglePost = (id) => {
+
+        if (!posts.length) {
+            get(`/posts/detail/${id}`)
+            .then((results) => {
+                setSinglePost(results.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+        } else {
+
+            let thisPost = posts.find((element) => element._id === id)
+            setSinglePost(thisPost)
+        }
     }
 
     return (
-        <LoadingContext.Provider value={{ countries, user, isLoading, setIsLoading, setUser, getCountries, findCountry, country, getUserPosts, buttonDisabled, setButtonDisabled, posts, setPosts, getPosts }} >
+        <LoadingContext.Provider value={{ countries, user, isLoading, setIsLoading, setUser, getCountries, findCountry, country, getUserPosts, userPosts, setUserPosts, buttonDisabled, setButtonDisabled, posts, setPosts, getPosts, singlePost, setSinglePost, getSinglePost }} >
             {children}
         </LoadingContext.Provider>
     )

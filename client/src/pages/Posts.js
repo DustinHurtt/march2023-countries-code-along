@@ -2,7 +2,7 @@ import { useContext, useEffect } from "react"
 import { Link } from 'react-router-dom'
 import { LoadingContext } from "../context/loading.context"
 
-
+import { returnRelativeTime } from "../services/time"
 
 const Posts = () => {
 
@@ -27,13 +27,14 @@ const Posts = () => {
                posts.map((post) => {
 
                 return (
-                    <Link id="all-posts-link" key={post._id} >
+                    <Link to={`/posts/${post._id}`} id="all-posts-link" key={post._id} >
                         
                             <img src={post.image} alt="post"/>
                             <div>
                                 <h4 key={post._id}>{post.title}</h4>
                                 <h5>Story about {post.country.commonName}</h5>
                                 <p>Contributed by: {post.author.fullName}</p>
+                                <p>Posted: {returnRelativeTime(post.createdAt)}</p>
                             </div>
                         
                     

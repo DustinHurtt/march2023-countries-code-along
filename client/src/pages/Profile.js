@@ -1,63 +1,69 @@
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from "react";
 
-import { Link } from 'react-router-dom'
+import { Link } from "react-router-dom";
 
-import { LoadingContext } from '../context/loading.context'
-
+import { LoadingContext } from "../context/loading.context";
 
 const Profile = () => {
+  const { user, userPosts, getUserPosts } = useContext(LoadingContext);
 
-    const { user, userPosts, getUserPosts } = useContext(LoadingContext)
+  useEffect(() => {
+    if (user && !userPosts.length) {
+      getUserPosts(user._id);
+    }
+  }, [user]);
 
-    // useEffect(() => {
-    //     getUserPosts(user._id)
-    // }, [])
-    
   return (
     <div>
-        <h1>Profile</h1>
+      <h1>Profile</h1>
 
-        {user && 
-        
+      {user && (
         <div>
+          <img id="profile-image" src={user.profilePic} alt="profile" />
 
-            <img id='profile-image' src={user.profilePic}  alt='profile'/>
+          <br />
 
-            <br />
+          {user.visitedCountries.length ? (
+            <p>Visited Countries:{" "}{user.visitedCountries.map((country) => country.commonName).join(", ")}</p>
+          ) : (
+            <p>No visited countries</p>
+          )}
 
-            {user.visitedCountries.length ? <p>Visited Countries: {user.visitedCountries.map((country) => country.commonName).join(", ")}</p>
-            
-            : <p>No visited countries</p>
-            
-            }
+          <p>Name: {user.fullName}</p>
+          <p>Age: {user.age}</p>
+          <p>Location: {user.location}</p>
 
-            <p>Name: {user.fullName}</p>
-            <p>Age: {user.age}</p>
-            <p>Location: {user.location}</p>
-
-            <Link to={`/profile/${user._id}`}><button>Update Profile</button></Link>
-
+          <Link to={`/profile/${user._id}`}>
+            <button>Update Profile</button>
+          </Link>
         </div>
+      )}
 
-        }
+      <h4>Posts</h4>
+      <Link to="/add-post">
+        <button>Create new post</button>
+      </Link>
 
-        <h4>Posts</h4>
-        <Link to='/add-post' >
-           <button>Create new post</button>
-        </Link>
-
-        {
-            
-            userPosts ? 
-             
-             <div>user posts</div>
-
-             : <p>No posts yet.</p>
-        }
-
-    
+      {userPosts.length ? (
+        <div id="all-posts-container">
+          {userPosts.map((post) => {
+            return (
+              <Link id="all-posts-link" key={post._id}>
+                <img src={post.image} alt="post" />
+                <div>
+                  <h4 key={post._id}>{post.title}</h4>
+                  <h5>Story about {post.country.commonName}</h5>
+                  <p>Contributed by: {post.author.fullName}</p>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      ) : (
+        <p>No posts yet.</p>
+      )}
     </div>
-  )
-}
+  );
+};
 
-export default Profile
+export default Profile;

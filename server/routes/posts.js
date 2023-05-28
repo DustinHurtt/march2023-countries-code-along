@@ -25,11 +25,26 @@ router.get('/', (req, res, next) => {
 
 })
 
+router.get('/user-posts/:id', (req, res, next) => {
+    Post.find({author: req.params.id})
+    .populate("country author")
+    .populate({
+      path: "comments",
+      populate: { path: "author" },
+    })
+    .sort({ createdAt: -1 })
+    .then((foundPosts) => {
+      res.json(foundPosts);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+})
+
 router.get('/detail/:id', (req, res, next) => {
 
     Post.findById(req.params.id)
-        .populate('country')
-        .populate('author')
+        .populate('country author likes')
         .populate({
             path: 'comments', 
             populate: {path: 'author'}
