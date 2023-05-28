@@ -22,7 +22,7 @@ const Posts = () => {
     {posts.length ? 
 
         <div id="all-posts-container">
-         <h2>SAMPLE</h2>
+
             {
                posts.map((post) => {
 
@@ -35,6 +35,7 @@ const Posts = () => {
                                 <h5>Story about {post.country.commonName}</h5>
                                 <p>Contributed by: {post.author.fullName}</p>
                             </div>
+                        
                     
                     </Link>
                 ) 

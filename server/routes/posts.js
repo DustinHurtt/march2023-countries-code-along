@@ -100,7 +100,7 @@ router.get('/delete/:id', (req, res, next) => {
 router.post('/one-time/add-comment', (req, res, next) => {
     Comment.create({
         comment: "hkjgkjhkjhkjh",
-        author: "hkjhkjhji"
+        author: "e02cd0599c3fe34162cd7ed7"
     })
     .then((results) => {
         console.log("one time", results.data)
