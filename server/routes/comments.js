@@ -28,15 +28,6 @@ router.post('/new-comment/:userId/:postId', (req, res, next) => {
             console.log(err)
         })
     })
-    // .then((toPopulate) => {
-    //     toPopulate.populate('author')
-    //         .then((populated) => {
-    //             res.json(populated)
-    //         })
-    //         .catch((err) => {
-    //             console.log(err)
-    //         })
-    // })
     .catch((err) => {
         console.log(err)
     })

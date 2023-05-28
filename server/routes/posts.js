@@ -10,7 +10,7 @@ const Comment = require('../models/Comment')
 router.get('/', (req, res, next) => {
 
     Post.find()
-      .populate("country author")
+      .populate("country author likes")
       .populate({
         path: "comments",
         populate: { path: "author" },
@@ -27,7 +27,7 @@ router.get('/', (req, res, next) => {
 
 router.get('/user-posts/:id', (req, res, next) => {
     Post.find({author: req.params.id})
-    .populate("country author")
+    .populate("country author likes")
     .populate({
       path: "comments",
       populate: { path: "author" },
@@ -49,7 +49,6 @@ router.get('/detail/:id', (req, res, next) => {
             path: 'comments', 
             populate: {path: 'author'}
         })
-        .populate('likes')
         .then((foundPost) => {
             res.json(foundPost)
         })
@@ -74,7 +73,7 @@ router.post('/create', isAuthenticated, (req, res, next) => {
         return createdPost
       })
       .then((toPopulate) => {
-        return toPopulate.populate("country author")
+        return toPopulate.populate("country author likes")
     })
       .then((populated) => {
         res.json(populated)
@@ -110,20 +109,6 @@ router.get('/delete/:id', (req, res, next) => {
             console.log(err)
         })
 
-})
-
-router.post('/one-time/add-comment', (req, res, next) => {
-    Comment.create({
-        comment: "hkjgkjhkjhkjh",
-        author: "e02cd0599c3fe34162cd7ed7"
-    })
-    .then((results) => {
-        console.log("one time", results.data)
-        res.json(results.data)
-    })
-    .catch((err) => {
-        console.log(err)
-    })
 })
 
 module.exports = router;

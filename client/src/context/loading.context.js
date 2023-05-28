@@ -63,6 +63,7 @@ const LoadingProvider = ({ children }) => {
         if (!posts.length) {
             get(`/posts/detail/${id}`)
             .then((results) => {
+                console.log("single post", results.data)
                 setSinglePost(results.data)
             })
             .catch((err) => {

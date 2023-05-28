@@ -8,13 +8,16 @@ import AddComment from '../components/AddComment'
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import { useMap } from "react-leaflet/hooks";
 
+import { HeartIcon as HeartIconSolid } from '@heroicons/react/24/solid'
+import { HeartIcon as HeartIconOutline } from '@heroicons/react/24/outline'
+
 import L from "leaflet";
 
 import "leaflet/dist/leaflet.css";
 
 import { returnReadableTime, returnRelativeTime } from "../services/time"
 
-import { post } from "../services/authService";
+import { get, post } from "../services/authService";
 
 import { returnReadableTimeShort } from "../services/time";
 
@@ -23,6 +26,7 @@ const PostDetails = () => {
 
     const [mapPosition, setMapPosition] = useState(null)
     const [comment, setComment] = useState({comment: '', author: ""})
+
 
     const { singlePost, getSinglePost, user, setSinglePost } = useContext(LoadingContext)
 
@@ -59,6 +63,49 @@ const PostDetails = () => {
                 console.log("Single post", singlePost)
             })
     }
+
+    const returnLike = (post) => {
+        
+        return post.likes.some(like => like._id === user._id)
+    }
+
+    const toggleLike = (post) => {
+
+        if (!returnLike(post)) {
+            console.log("line 78")
+            get(`/likes/add-like/${post._id}`)
+                .then((results) => {
+                    console.log(results.data)
+                    setSinglePost(results.data)
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        } else {
+            get(`/likes/remove-like/${post._id}`)
+                .then((results) => {
+                    console.log(results.data)
+                    setSinglePost(results.data)
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        }
+
+    }
+
+    const likedBy = (post) => {
+        let likesArray = [...post.likes].reverse()
+        console.log("REversed?", likesArray)
+        if (likesArray.length > 2) {
+            return `Liked by ${likesArray[0].fullName}, ${likesArray[1].fullName} & ${likesArray.length - 2} more...`
+        } else if (likesArray.length === 2) {
+            return `Liked by ${likesArray[0].fullName} & ${likesArray[1].fullName}`
+        } else {
+            return `${likesArray[0].fullName}`
+        }
+    }
+
 
     useEffect(() => {
 
@@ -124,6 +171,27 @@ const PostDetails = () => {
 
             <p style={{whiteSpace: "pre-wrap"}}>{singlePost.story}</p>
 
+            <h6>Likes:</h6>
+
+            <button onClick={()=>toggleLike(singlePost)}>
+                {returnLike(singlePost) ? 
+                
+                <HeartIconSolid style={{color: 'red'}} className="mr-1 h-5 w-5 text-danger" />
+                :
+                <HeartIconOutline className="mr-1 h-5 w-5 text-danger" />
+                
+                }
+            </button>
+
+
+            {singlePost.likes.length ? 
+            
+                <p>Liked by {likedBy(singlePost)} </p>
+
+                : <p>No likes yet...</p>
+            
+            }
+
             <h6>Comments:</h6>
 
             <AddComment comment={comment} setComment={setComment} submitComment={submitComment}/>
@@ -153,4 +221,5 @@ const PostDetails = () => {
 }
 
 export default PostDetails
+
 
