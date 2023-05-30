@@ -48,7 +48,7 @@ const Profile = () => {
         <div id="all-posts-container">
           {userPosts.map((post) => {
             return (
-              <Link id="all-posts-link" key={post._id}>
+              <Link to={`/posts/${post._id}`} id="all-posts-link" key={post._id}>
                 <img src={post.image} alt="post" />
                 <div>
                   <h4 key={post._id}>{post.title}</h4>

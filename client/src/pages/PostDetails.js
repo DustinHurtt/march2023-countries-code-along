@@ -66,7 +66,7 @@ const PostDetails = () => {
 
     const returnLike = (post) => {
         
-        return post.likes.some(like => like._id === user._id)
+        return post.likes.some(like => like._id === user?._id)
     }
 
     const toggleLike = (post) => {
@@ -102,7 +102,7 @@ const PostDetails = () => {
         } else if (likesArray.length === 2) {
             return `Liked by ${likesArray[0].fullName} & ${likesArray[1].fullName}`
         } else {
-            return `${likesArray[0].fullName}`
+            return `Liked by ${likesArray[0].fullName}`
         }
     }
 
@@ -131,6 +131,10 @@ const PostDetails = () => {
         <div>
         
             <h1>Post Details</h1>
+
+            {singlePost.author._id === user._id && 
+                <button>Edit Post</button>
+            }
 
             <div>
                 <img src={singlePost.image} alt="post" style={{height: "40vh"}}/>
@@ -186,7 +190,7 @@ const PostDetails = () => {
 
             {singlePost.likes.length ? 
             
-                <p>Liked by {likedBy(singlePost)} </p>
+                <p>{likedBy(singlePost)} </p>
 
                 : <p>No likes yet...</p>
             

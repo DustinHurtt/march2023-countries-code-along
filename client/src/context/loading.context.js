@@ -14,6 +14,14 @@ const LoadingProvider = ({ children }) => {
     const [posts, setPosts] = useState([])
     const [userPosts, setUserPosts] = useState([])
     const [singlePost, setSinglePost] = useState(null)
+    const [errorMessage, setErrorMessage] = useState('')
+
+    const setTimedMessage = (newMessage) => {
+        setErrorMessage(newMessage);
+        setTimeout(() => {
+          setErrorMessage('')
+        }, 4000)
+      }
 
     const getCountries = () => {
 
@@ -28,7 +36,6 @@ const LoadingProvider = ({ children }) => {
     }
 
     const findCountry = (id) => {
-            console.log("finding")
             let thisCountry = countries.find((country) => country._id === id)
             console.log("this country", thisCountry)
             setCountry(thisCountry) 
@@ -77,7 +84,7 @@ const LoadingProvider = ({ children }) => {
     }
 
     return (
-        <LoadingContext.Provider value={{ countries, user, isLoading, setIsLoading, setUser, getCountries, findCountry, country, getUserPosts, userPosts, setUserPosts, buttonDisabled, setButtonDisabled, posts, setPosts, getPosts, singlePost, setSinglePost, getSinglePost }} >
+        <LoadingContext.Provider value={{ countries, user, isLoading, setIsLoading, setUser, getCountries, findCountry, country, getUserPosts, userPosts, setUserPosts, buttonDisabled, setButtonDisabled, posts, setPosts, getPosts, singlePost, setSinglePost, getSinglePost, errorMessage, setTimedMessage }} >
             {children}
         </LoadingContext.Provider>
     )

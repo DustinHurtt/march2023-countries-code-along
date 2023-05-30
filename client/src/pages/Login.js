@@ -9,7 +9,7 @@ import { post } from "../services/authService"
 
 const Login = () => {
 
-    const { setUser } = useContext(LoadingContext)
+    const { setUser, errorMessage } = useContext(LoadingContext)
 
     const { storeToken } = useContext(AuthContext)
 
@@ -58,6 +58,8 @@ const Login = () => {
 
             <button type="submit">Login</button>
         </form>
+
+        {errorMessage && <p>{errorMessage}</p>}
     </div>
   )
 }

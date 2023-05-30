@@ -14,13 +14,13 @@ const Navbar = () => {
 
   return (
 
-    <nav>
+    <nav className='relative flex flex-wrap items-center justify-between px-2 py-3 bg-purple-500 mb-3'>
 
-        <Link to='/'>Home</Link>
+        <Link to='/' className="text-sm font-bold leading-relaxed inline-block mr-4 py-2 whitespace-nowrap uppercase text-white">Home</Link>
 
-        <Link to='/countries'>Countries</Link>
+        <Link to='/countries' className="text-sm font-bold leading-relaxed inline-block mr-4 py-2 whitespace-nowrap uppercase text-white">Countries</Link>
 
-        <Link to='/posts'>Posts</Link>
+        <Link to='/posts' className="text-sm font-bold leading-relaxed inline-block mr-4 py-2 whitespace-nowrap uppercase text-white">Posts</Link>
 
 
         {
@@ -28,11 +28,11 @@ const Navbar = () => {
 
             <>
 
-                <Link to='/profile'>Profile</Link>
+                <Link to='/profile' className="text-sm font-bold leading-relaxed inline-block mr-4 py-2 whitespace-nowrap uppercase text-white">Profile</Link>
 
-                <Link to='/add-post'>Add Post</Link>
+                <Link to='/add-post' className="text-sm font-bold leading-relaxed inline-block mr-4 py-2 whitespace-nowrap uppercase text-white">Add Post</Link>
 
-                <button onClick={logOutUser}>Logout</button>
+                <button onClick={logOutUser} className="text-sm font-bold leading-relaxed inline-block mr-4 py-2 whitespace-nowrap uppercase text-white">Logout</button>
 
             </>
 
@@ -40,14 +40,14 @@ const Navbar = () => {
 
             <>
 
-                <Link to='/signup'>Sign Up</Link>
+                <Link to='/signup' className="text-sm font-bold leading-relaxed inline-block mr-4 py-2 whitespace-nowrap uppercase text-white">Sign Up</Link>
 
-                <Link to='login'>Login</Link>
+                <Link to='login' className="text-sm font-bold leading-relaxed inline-block mr-4 py-2 whitespace-nowrap uppercase text-white">Login</Link>
 
             </>
         }
 
-
+        
 
 
     </nav>

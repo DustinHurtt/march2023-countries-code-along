@@ -1,7 +1,11 @@
 
 import './App.css';
 
+import { useContext } from 'react'
+
 import { Routes, Route, Outlet, Navigate } from 'react-router-dom';
+
+import { LoadingContext } from './context/loading.context';
 
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
@@ -14,15 +18,19 @@ import Login from './pages/Login';
 import Profile from './pages/Profile';
 import AddPost from './pages/AddPost';
 import ProfileUpdate from './pages/ProfileUpdate';
+import SecondNav from './components/SecondNav';
 
 function App() {
+  
+  const { setTimedMessage } = useContext(LoadingContext)
 
   const getToken = () => {
     return localStorage.getItem('authToken')
   }
 
   const LoggedIn = () => {
-    return getToken() ? <Outlet /> : <Navigate to='/' />
+    setTimedMessage('Please login to access that feature.')
+    return getToken() ? <Outlet /> : <Navigate to='/login' />
   }
 
   const NotLoggedIn = () => {
@@ -36,13 +44,15 @@ function App() {
 
       <Navbar />
 
+      {/* <SecondNav /> */}
+
       <Routes>
 
         <Route path='/' element={<Home />} />
         <Route path='/countries' element={<Countries />} />
         <Route path='/country/:id' element={<CountryDetails />} />
         <Route path='/posts' element={<Posts />} />
-        <Route path='/posts/:id' element={<PostDetails />} />
+        
 
 
 
@@ -59,6 +69,7 @@ function App() {
           <Route path='/profile' element={<Profile />} />
           <Route path='/profile/:id' element={<ProfileUpdate />} />
           <Route path='/add-post' element={<AddPost />} />
+          <Route path='/posts/:id' element={<PostDetails />} />
 
         </Route>
 
