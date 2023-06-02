@@ -1,11 +1,15 @@
-import { useContext, useEffect, useState } from "react"
+import _ from 'lodash'
+
+import { cloneDeep } from 'lodash'
+
+import { useContext, useEffect, useState, useMemo } from "react"
 import { useParams, Link } from "react-router-dom"
 
 import { LoadingContext } from "../context/loading.context"
 
 import AddComment from '../components/AddComment'
 
-import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import { MapContainer, Marker, Popup, TileLayer, GeoJSON } from "react-leaflet";
 import { useMap } from "react-leaflet/hooks";
 
 import { HeartIcon as HeartIconSolid } from '@heroicons/react/24/solid'
@@ -24,11 +28,11 @@ import { returnReadableTimeShort } from "../services/time";
 
 const PostDetails = () => {
 
-    const [mapPosition, setMapPosition] = useState(null)
+    // const [mapPosition, setMapPosition] = useState(null)
     const [comment, setComment] = useState({comment: '', author: ""})
 
 
-    const { singlePost, getSinglePost, user, setSinglePost } = useContext(LoadingContext)
+    const { singlePost, getSinglePost, user, setSinglePost, posts, getPosts, mapPosition } = useContext(LoadingContext)
 
     const { id } = useParams()
 
@@ -94,134 +98,296 @@ const PostDetails = () => {
 
     }
 
-    const likedBy = (post) => {
-        let likesArray = [...post.likes].reverse()
-        console.log("REversed?", likesArray)
-        if (likesArray.length > 2) {
-            return `Liked by ${likesArray[0].fullName}, ${likesArray[1].fullName} & ${likesArray.length - 2} more...`
-        } else if (likesArray.length === 2) {
-            return `Liked by ${likesArray[0].fullName} & ${likesArray[1].fullName}`
+    const likedBy = (array) => {
+        let likesArray = _.cloneDeep(array)
+        let reversed = likesArray.reverse()
+        console.log("REversed?")
+        if (reversed.length > 2) {
+            return `Liked by ${reversed[0].fullName}, ${reversed[1].fullName} & ${reversed.length - 2} more...`
+        } else if (reversed.length === 2) {
+            return `Liked by ${reversed[0].fullName} & ${reversed[1].fullName}`
         } else {
-            return `Liked by ${likesArray[0].fullName}`
+            return `Liked by ${reversed[0].fullName}`
         }
     }
 
 
-    useEffect(() => {
+    // useEffect(() => {
 
-            getSinglePost(id)
-        
-    }, [id])
+    //     if (posts.length) {
+    //         let thisPost = posts.find((element) => element._id === id)
+    //         setSinglePost(thisPost)
+    //     } else {
+    //         getSinglePost(id)
+    //     }
+
+  
+
+
+    //     // if (!posts.length) {
+    //     //     // getPosts()
+    //     //     get(`/posts/detail/${id}`)
+    //     //     .then((results) => {
+    //     //         console.log("single post", results.data)
+    //     //         setSinglePost(results.data)
+    //     //         let position = [results.data.country.coordinates[0], results.data.country.coordinates[1]];
+    //     //         setMapPosition(position)
+    //     //     })
+    //     //     .catch((err) => {
+    //     //         console.log(err)
+    //     //     })
+    //     // } else {
+    //     //     let thisPost = posts.find((element) => element._id === id)
+    //     //     setSinglePost(thisPost)
+    //     //     let position = [thisPost.country.coordinates[0], thisPost.country.coordinates[1]];
+    //     //     setMapPosition(position)
+    //     // }
+
+    //     // return () => {
+    //     //     setSinglePost(null)
+    //     // }
+    
+    // }, [])
 
     useEffect(() => {
-        if (singlePost) {
-            let position = [singlePost.country.coordinates[0], singlePost.country.coordinates[1]];
-            setMapPosition(position);
+        if (!singlePost || singlePost._id !== id) {
+         getSinglePost(posts, id)
         }
-    }, [singlePost])
+        
+    }, [])
+    // useEffect(() => {
+    //     if (!singlePost || singlePost._id !== id) {
+    //         // let thisPost = posts.find((element) => element._id === id)
+    //         // setSinglePost(thisPost)
+            
+    //         getSinglePost(posts, id)
+    //     }
+        
+    //     // window.scrollTo(0,0)
+    //     // else {
+    //     // }
+    // }, [])
 
+    // useEffect(() => {
+    //     if (singlePost) {
+    //         let position = [singlePost.country.coordinates[0], singlePost.country.coordinates[1]];
+    //         setMapPosition(position);
+    //     }
+    // }, [singlePost])
 
+    // mapPosition && singlePost.likes.length && singlePost.comments.length
 
   return (
-
-
     <>
-        {singlePost ?
-    
+      {singlePost ? (
         <div>
-        
-            <h1>Post Details</h1>
+          <h1>Post Details</h1>
 
-            {singlePost.author._id === user._id && 
-                <button>Edit Post</button>
-            }
+          {singlePost.author._id === user._id && <Link to={`/edit-post/${singlePost._id}`}><button>Edit Post</button></Link>}
 
-            <div>
-                <img src={singlePost.image} alt="post" style={{height: "40vh"}}/>
-                {mapPosition ? (
+          <div>
+            <img src={singlePost.image} alt="post" style={{ height: "40vh" }} />
+
               <div id="map-container">
                 <MapContainer
                   id="map"
-                  center={mapPosition}
+                  center={singlePost.country.coordinates}
                   zoom={4}
                   scrollWheelZoom={false}
+                  
+                  
                 >
                   <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    style={{width: '30vw'}}
                   />
-                  <Marker position={mapPosition} icon={myIcon}>
+                  {/* <GeoJSON type="Feature" /> */}
+                  <Marker position={singlePost.country.coordinates} icon={myIcon} >
                     <Popup>
                       <span>Location of {singlePost.country.commonName}</span>
                     </Popup>
                   </Marker>
-                  <ChangeMapView coords={mapPosition} />
+                  <ChangeMapView coords={singlePost.country.coordinates} />
                 </MapContainer>
               </div>
+
+          </div>
+
+          <h2>{singlePost.title}</h2>
+          <h3>{singlePost.country.commonName}</h3>
+
+          <p>
+            Posted {returnRelativeTime(singlePost.createdAt)} on{" "}
+            {returnReadableTime(singlePost.createdAt)}
+          </p>
+
+          <p>
+            Contributed by:{" "}
+            <span>
+              <Link>{singlePost.author.fullName}</Link>
+            </span>
+          </p>
+
+          <p style={{ whiteSpace: "pre-wrap" }}>{singlePost.story}</p>
+
+          <h6>Likes:</h6>
+
+          <button onClick={() => toggleLike(singlePost)}>
+            {returnLike(singlePost) ? (
+              <HeartIconSolid
+                style={{ color: "red" }}
+                className="mr-1 h-5 w-5 text-danger"
+              />
             ) : (
-              <p>No map available.</p>
+              <HeartIconOutline className="mr-1 h-5 w-5 text-danger" />
             )}
-
-            </div>
-
-            <h2>{singlePost.title}</h2>
-            <h3>{singlePost.country.commonName}</h3>
-
-            <p>Posted {returnRelativeTime(singlePost.createdAt)} on {returnReadableTime(singlePost.createdAt)}</p>
-
-            <p>Contributed by: <span><Link>{singlePost.author.fullName}</Link></span></p>
+          </button>
 
 
-
-            <p style={{whiteSpace: "pre-wrap"}}>{singlePost.story}</p>
-
-            <h6>Likes:</h6>
-
-            <button onClick={()=>toggleLike(singlePost)}>
-                {returnLike(singlePost) ? 
-                
-                <HeartIconSolid style={{color: 'red'}} className="mr-1 h-5 w-5 text-danger" />
-                :
-                <HeartIconOutline className="mr-1 h-5 w-5 text-danger" />
-                
-                }
-            </button>
+     {singlePost.likes.length ? (
+       <p>{likedBy(singlePost.likes)} </p>
+     ) : (
+       <p>No likes yet...</p>
+     )}
 
 
-            {singlePost.likes.length ? 
-            
-                <p>{likedBy(singlePost)} </p>
+          <h6>Comments:</h6>
 
-                : <p>No likes yet...</p>
-            
-            }
+          <AddComment
+            comment={comment}
+            setComment={setComment}
+            submitComment={submitComment}
+          />
 
-            <h6>Comments:</h6>
 
-            <AddComment comment={comment} setComment={setComment} submitComment={submitComment}/>
+            <>
+              {singlePost.comments.map((comment) => {
+                return (
+                  <div key={comment._id}>
+                    <p>{comment.comment}</p>
+                    <p>- {comment.author.fullName}</p>
+                    <p>{returnReadableTimeShort(comment.createdAt)}</p>
+                  </div>
+                );
+              })}
+            </>
 
-            {
-                singlePost.comments.length ? 
-                <>
-                    {singlePost.comments.map((comment) => {
-                        return  <div key={comment._id}>
-
-                                    <p>{comment.comment}</p>
-                                    <p>- {comment.author.fullName}</p>
-                                    <p>{returnReadableTimeShort(comment.createdAt)}</p>
-
-                                </div>
-                    })}
-                </>
-                : <p>No comments yet...</p>
-            }
-    
         </div>
-    
-        : <p>Loading...</p>
-        }
+      ) : (
+        <p>Loading...</p>
+      )}
     </>
-  )
+
+
+
+    // <>
+    //   {singlePost ? (
+    //     <div>
+    //       <h1>Post Details</h1>
+
+    //       {singlePost.author._id === user._id && <Link to={`/edit-post/${singlePost._id}`}><button>Edit Post</button></Link>}
+
+    //       <div>
+    //         <img src={singlePost.image} alt="post" style={{ height: "40vh" }} />
+    //         {mapPosition ? (
+    //           <div id="map-container">
+    //             <MapContainer
+    //               id="map"
+    //               center={mapPosition}
+    //               zoom={4}
+    //               scrollWheelZoom={false}
+                  
+    //             >
+    //               <TileLayer
+    //                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    //                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    
+    //               />
+    //               {/* <GeoJSON type="Feature" /> */}
+    //               <Marker position={mapPosition} icon={myIcon} >
+    //                 <Popup>
+    //                   <span>Location of {singlePost.country.commonName}</span>
+    //                 </Popup>
+    //               </Marker>
+    //               <ChangeMapView coords={mapPosition} />
+    //             </MapContainer>
+    //           </div>
+    //         ) : (
+    //           <p>No map available.</p>
+    //         )}
+    //       </div>
+
+    //       <h2>{singlePost.title}</h2>
+    //       <h3>{singlePost.country.commonName}</h3>
+
+    //       <p>
+    //         Posted {returnRelativeTime(singlePost.createdAt)} on{" "}
+    //         {returnReadableTime(singlePost.createdAt)}
+    //       </p>
+
+    //       <p>
+    //         Contributed by:{" "}
+    //         <span>
+    //           <Link>{singlePost.author.fullName}</Link>
+    //         </span>
+    //       </p>
+
+    //       <p style={{ whiteSpace: "pre-wrap" }}>{singlePost.story}</p>
+
+    //       <h6>Likes:</h6>
+
+    //       <button onClick={() => toggleLike(singlePost)}>
+    //         {returnLike(singlePost) ? (
+    //           <HeartIconSolid
+    //             style={{ color: "red" }}
+    //             className="mr-1 h-5 w-5 text-danger"
+    //           />
+    //         ) : (
+    //           <HeartIconOutline className="mr-1 h-5 w-5 text-danger" />
+    //         )}
+    //       </button>
+
+    //       {singlePost.likes.length ? (
+    //         <p>{likedBy(singlePost.likes)} </p>
+    //       ) : (
+    //         <p>No likes yet...</p>
+    //       )}
+
+    //       <h6>Comments:</h6>
+
+    //       <AddComment
+    //         comment={comment}
+    //         setComment={setComment}
+    //         submitComment={submitComment}
+    //       />
+
+    //       {singlePost.comments.length ? (
+    //         <>
+    //           {singlePost.comments.map((comment) => {
+    //             return (
+    //               <div key={comment._id}>
+    //                 <p>{comment.comment}</p>
+    //                 <p>- {comment.author.fullName}</p>
+    //                 <p>{returnReadableTimeShort(comment.createdAt)}</p>
+    //               </div>
+    //             );
+    //           })}
+    //         </>
+    //       ) : (
+    //         <p>No comments yet...</p>
+    //       )}
+    //     </div>
+    //   ) : (
+    //     <p>Loading...</p>
+    //   )}
+    // </>
+
+
+
+
+
+  );
 }
 
 export default PostDetails

@@ -86,9 +86,18 @@ router.post('/create', isAuthenticated, (req, res, next) => {
 
 router.post('/update/:id', (req, res, next) => {
 
-    Post.findByIdAndUpdate(req.params.id, req.body,
+    Post.findByIdAndUpdate(req.params.id, {
+        title: req.body.title,
+        story: req.body.story,
+        image: req.body.image
+    },
         {
             new: true
+        })
+        .populate('country author likes')
+        .populate({
+            path: 'comments', 
+            populate: {path: 'author'}
         })
         .then((updatedPost) => {
             res.json(updatedPost)

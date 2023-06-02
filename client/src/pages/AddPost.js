@@ -12,7 +12,7 @@ import { post } from "../services/authService";
 
 const AddPost = () => {
 
-    const { user, buttonDisabled, setButtonDisabled, posts, setPosts } = useContext(LoadingContext)
+    const { user, buttonDisabled, setButtonDisabled, posts, setPosts, getPosts } = useContext(LoadingContext)
 
     const navigate = useNavigate()
 
@@ -89,13 +89,19 @@ const AddPost = () => {
         post('/posts/create', newPost)
             .then((results) => {
                 console.log("post create result", results.data)
-                setPosts([results.data, ...posts])
-                // console.log(posts)
-                navigate('/posts')
+                if (posts.length) {
+                    setPosts([results.data, ...posts])
+                } else {
+                    getPosts()
+                }
+                
                 
             })
             .catch((err) => {
                 console.log(err)
+            })
+            .finally(() => {
+                navigate('/posts')
             })
 
     }

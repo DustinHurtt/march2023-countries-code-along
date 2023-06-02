@@ -6,7 +6,19 @@ import { returnRelativeTime } from "../services/time"
 
 const Posts = () => {
 
-    const { posts, getPosts } = useContext(LoadingContext)
+    const { user, posts, getPosts, setSinglePost, getSinglePost, setTimedMessage } = useContext(LoadingContext)
+
+    const setPost = (id) => {
+        let thisPost = posts.find((element) => element._id === id)
+        setSinglePost(thisPost)
+    }
+
+    const handleClick = (id) => {
+        if (!user) {
+            setTimedMessage('Please login to access that feature.')
+        }
+        getSinglePost(posts, id)
+    }
 
     useEffect(() => {
         if(!posts.length) {
@@ -27,7 +39,7 @@ const Posts = () => {
                posts.map((post) => {
 
                 return (
-                    <Link to={`/posts/${post._id}`} id="all-posts-link" key={post._id} >
+                    <Link to={`/posts/${post._id}`} id="all-posts-link" key={post._id} onClick={()=>handleClick(post._id)} >
                         
                             <img src={post.image} alt="post"/>
                             <div>

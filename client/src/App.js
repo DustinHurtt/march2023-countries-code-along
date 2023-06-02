@@ -18,7 +18,8 @@ import Login from './pages/Login';
 import Profile from './pages/Profile';
 import AddPost from './pages/AddPost';
 import ProfileUpdate from './pages/ProfileUpdate';
-import SecondNav from './components/SecondNav';
+import EditPost from './pages/EditPost'
+// import SecondNav from './components/SecondNav';
 
 function App() {
   
@@ -29,8 +30,8 @@ function App() {
   }
 
   const LoggedIn = () => {
-    setTimedMessage('Please login to access that feature.')
-    return getToken() ? <Outlet /> : <Navigate to='/login' />
+    // setTimedMessage('Please login to access that feature.')
+    return getToken() ? <Outlet /> : <Navigate to='/login' /> 
   }
 
   const NotLoggedIn = () => {
@@ -54,8 +55,6 @@ function App() {
         <Route path='/posts' element={<Posts />} />
         
 
-
-
         <Route element={<NotLoggedIn />}>
 
           <Route path='/signup' element={<Signup />} />
@@ -70,6 +69,7 @@ function App() {
           <Route path='/profile/:id' element={<ProfileUpdate />} />
           <Route path='/add-post' element={<AddPost />} />
           <Route path='/posts/:id' element={<PostDetails />} />
+          <Route path='/edit-post/:id' element={<EditPost />} />
 
         </Route>
 

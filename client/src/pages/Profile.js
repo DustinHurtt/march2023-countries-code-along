@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { LoadingContext } from "../context/loading.context";
 
 const Profile = () => {
-  const { user, userPosts, getUserPosts } = useContext(LoadingContext);
+  const { user, userPosts, getUserPosts, getSinglePost, errorMessage } = useContext(LoadingContext);
 
   useEffect(() => {
     if (user && !userPosts.length) {
@@ -17,6 +17,8 @@ const Profile = () => {
     <div>
       <h1>Profile</h1>
 
+      {errorMessage && <p>{errorMessage}</p>}
+
       {user && (
         <div>
           <img id="profile-image" src={user.profilePic} alt="profile" />
@@ -24,7 +26,7 @@ const Profile = () => {
           <br />
 
           {user.visitedCountries.length ? (
-            <p>Visited Countries:{" "}{user.visitedCountries.map((country) => country.commonName).join(", ")}</p>
+            <p>Visited Countries:{" "}{user.visitedCountries.map((country) => country.commonName).sort((a, b) => a.localeCompare(b)).join(", ")}</p>
           ) : (
             <p>No visited countries</p>
           )}
@@ -48,7 +50,7 @@ const Profile = () => {
         <div id="all-posts-container">
           {userPosts.map((post) => {
             return (
-              <Link to={`/posts/${post._id}`} id="all-posts-link" key={post._id}>
+              <Link to={`/posts/${post._id}`} id="all-posts-link" key={post._id} onClick={()=>getSinglePost(userPosts, post._id)}>
                 <img src={post.image} alt="post" />
                 <div>
                   <h4 key={post._id}>{post.title}</h4>

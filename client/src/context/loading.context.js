@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useState, useMemo } from "react";
 import { get } from "../services/authService";
 import axios from 'axios'
 
@@ -15,6 +15,7 @@ const LoadingProvider = ({ children }) => {
     const [userPosts, setUserPosts] = useState([])
     const [singlePost, setSinglePost] = useState(null)
     const [errorMessage, setErrorMessage] = useState('')
+    const [mapPosition, setMapPosition] = useState(null)
 
     const setTimedMessage = (newMessage) => {
         setErrorMessage(newMessage);
@@ -65,26 +66,60 @@ const LoadingProvider = ({ children }) => {
             })
     }
 
-    const getSinglePost = (id) => {
+    const getSinglePost = async (thesePosts, id) => {
 
-        if (!posts.length) {
-            get(`/posts/detail/${id}`)
-            .then((results) => {
-                console.log("single post", results.data)
+        if (!thesePosts.length) {
+
+            try {
+                let results = await get(`/posts/detail/${id}`)
                 setSinglePost(results.data)
-            })
-            .catch((err) => {
+            }
+            
+            catch(err) {
                 console.log(err)
-            })
+            }
+
         } else {
 
-            let thisPost = posts.find((element) => element._id === id)
+            let thisPost = thesePosts.find((element) => element._id === id)
             setSinglePost(thisPost)
+
         }
     }
+    // const getSinglePost = async (thesePosts, id) => {
+
+    //     if (!thesePosts.length) {
+    //         // getPosts()
+    //         try {
+    //             let results = await get(`/posts/detail/${id}`)
+    //             setSinglePost(results.data)
+    //             // let position = [results.data.country.coordinates[0], results.data.country.coordinates[1]];
+    //             // setMapPosition(position);
+
+    //         }
+
+    //         catch(err) {
+    //             console.log(err)
+    //         }
+    //         // get(`/posts/detail/${id}`)
+    //         // .then((results) => {
+    //         //     console.log("single post", results.data)
+    //         //     setSinglePost(results.data)
+    //         // })
+    //         // .catch((err) => {
+    //         //     console.log(err)
+    //         // })
+    //     } else {
+
+    //         let thisPost = thesePosts.find((element) => element._id === id)
+    //         setSinglePost(thisPost)
+    //         // let position = [thisPost.country.coordinates[0], thisPost.country.coordinates[1]];
+    //         // setMapPosition(position);
+    //     }
+    // }
 
     return (
-        <LoadingContext.Provider value={{ countries, user, isLoading, setIsLoading, setUser, getCountries, findCountry, country, getUserPosts, userPosts, setUserPosts, buttonDisabled, setButtonDisabled, posts, setPosts, getPosts, singlePost, setSinglePost, getSinglePost, errorMessage, setTimedMessage }} >
+        <LoadingContext.Provider value={{ countries, user, isLoading, setIsLoading, setUser, getCountries, findCountry, country, getUserPosts, userPosts, setUserPosts, buttonDisabled, setButtonDisabled, posts, setPosts, getPosts, singlePost, setSinglePost, getSinglePost, errorMessage, setTimedMessage, mapPosition }} >
             {children}
         </LoadingContext.Provider>
     )
