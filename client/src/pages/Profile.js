@@ -8,10 +8,17 @@ const Profile = () => {
   const { user, userPosts, getUserPosts, getSinglePost, errorMessage } = useContext(LoadingContext);
 
   useEffect(() => {
-    if (user && !userPosts.length) {
+    if (user && !userPosts) {
       getUserPosts(user._id);
     }
   }, [user]);
+
+
+//   useEffect(() => {
+//     if (user) {
+//       getUserPosts(user._id);
+//     }
+//   }, [user]);
 
   return (
     <div>
@@ -46,7 +53,7 @@ const Profile = () => {
         <button>Create new post</button>
       </Link>
 
-      {userPosts.length ? (
+      {userPosts && userPosts.length ? (
         <div id="all-posts-container">
           {userPosts.map((post) => {
             return (

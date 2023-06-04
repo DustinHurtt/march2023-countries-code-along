@@ -19,7 +19,7 @@ import Profile from './pages/Profile';
 import AddPost from './pages/AddPost';
 import ProfileUpdate from './pages/ProfileUpdate';
 import EditPost from './pages/EditPost'
-// import SecondNav from './components/SecondNav';
+
 
 function App() {
   
@@ -43,40 +43,48 @@ function App() {
   return (
     <div className="App">
 
-      <Navbar />
+    
+       <Navbar />
 
-      {/* <SecondNav /> */}
+       <Routes>
 
-      <Routes>
-
-        <Route path='/' element={<Home />} />
-        <Route path='/countries' element={<Countries />} />
-        <Route path='/country/:id' element={<CountryDetails />} />
-        <Route path='/posts' element={<Posts />} />
+         <Route path='/' element={<Home />} />
+         <Route path='/countries' element={<Countries />} />
+         <Route path='/country/:id' element={<CountryDetails />} />
+         <Route path='/posts' element={<Posts />} />
         
 
-        <Route element={<NotLoggedIn />}>
+         <Route element={<NotLoggedIn />}>
 
-          <Route path='/signup' element={<Signup />} />
-          <Route path='/login' element={<Login />} />
+           <Route path='/signup' element={<Signup />} />
+           <Route path='/login' element={<Login />} />
 
-        </Route>
+         </Route>
 
 
-        <Route element={<LoggedIn />}>
+         <Route element={<LoggedIn />}>
 
-          <Route path='/profile' element={<Profile />} />
-          <Route path='/profile/:id' element={<ProfileUpdate />} />
-          <Route path='/add-post' element={<AddPost />} />
-          <Route path='/posts/:id' element={<PostDetails />} />
-          <Route path='/edit-post/:id' element={<EditPost />} />
+           <Route path='/profile' element={<Profile />} />
+           <Route path='/profile/:id' element={<ProfileUpdate />} />
+           <Route path='/add-post' element={<AddPost />} />
+           <Route path='/posts/:id' element={<PostDetails />} />
+           <Route path='/edit-post/:id' element={<EditPost />} />
 
-        </Route>
+         </Route>
 
-      </Routes>
+       </Routes>
+
+
 
     </div>
   );
 }
 
 export default App;
+
+
+
+
+
+
+

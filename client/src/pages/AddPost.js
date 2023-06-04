@@ -12,7 +12,7 @@ import { post } from "../services/authService";
 
 const AddPost = () => {
 
-    const { user, buttonDisabled, setButtonDisabled, posts, setPosts, getPosts } = useContext(LoadingContext)
+    const { user, posts, setPosts, getPosts } = useContext(LoadingContext)
 
     const navigate = useNavigate()
 
@@ -22,6 +22,8 @@ const AddPost = () => {
         image: '',
         country: '',
     })
+
+    const [buttonDisabled, setButtonDisabled] = useState(false)
 
     const handleTextChange = (e) => {
         setNewPost((prev) => ({...prev, [e.target.name]: e.target.value}))
@@ -43,6 +45,8 @@ const AddPost = () => {
     const theseOptions = user ? visited : []
 
     const handleSelectChange = (e) => {
+
+        console.log("Select change")
 
         if (!e) {
             setNewPost((prev) => ({        
@@ -73,6 +77,7 @@ const AddPost = () => {
         fileChange(e)
           .then((response) => {
             console.log(response.data);
+            console.log("post", newPost)
             setNewPost((prev) => ({...prev, [e.target.name]: response.data.image}));
             setButtonDisabled(false);
           })
@@ -94,8 +99,7 @@ const AddPost = () => {
                 } else {
                     getPosts()
                 }
-                
-                
+                         
             })
             .catch((err) => {
                 console.log(err)
@@ -128,7 +132,9 @@ const AddPost = () => {
                     : <p>No visited countries added</p>
                 }
 
+                {console.log("this is new post now", newPost)}
                 { newPost.country ? 
+
                 
                 <form onSubmit={handleSubmit}>
                     <label>Image</label>

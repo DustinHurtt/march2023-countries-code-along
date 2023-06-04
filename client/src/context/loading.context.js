@@ -1,4 +1,4 @@
-import { createContext, useState, useMemo } from "react";
+import { createContext, useState, useMemo, useCallback } from "react";
 import { get } from "../services/authService";
 import axios from 'axios'
 
@@ -10,9 +10,8 @@ const LoadingProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [countries, setCountries ] = useState([]);
     const [country, setCountry] = useState(null)
-    const [buttonDisabled, setButtonDisabled] = useState(false)
     const [posts, setPosts] = useState([])
-    const [userPosts, setUserPosts] = useState([])
+    const [userPosts, setUserPosts] = useState(null)
     const [singlePost, setSinglePost] = useState(null)
     const [errorMessage, setErrorMessage] = useState('')
     const [mapPosition, setMapPosition] = useState(null)
@@ -58,8 +57,10 @@ const LoadingProvider = ({ children }) => {
     const getUserPosts = (id) => {
         get(`/posts/user-posts/${id}`)
             .then((results) => {
-                console.log("user posts:", results.data)
-                setUserPosts(results.data)
+
+                    console.log("user posts:", results.data)
+                    setUserPosts(results.data)
+          
             })
             .catch((err) => {
                 console.log(err)
@@ -74,7 +75,7 @@ const LoadingProvider = ({ children }) => {
                 let results = await get(`/posts/detail/${id}`)
                 setSinglePost(results.data)
             }
-            
+
             catch(err) {
                 console.log(err)
             }
@@ -119,7 +120,7 @@ const LoadingProvider = ({ children }) => {
     // }
 
     return (
-        <LoadingContext.Provider value={{ countries, user, isLoading, setIsLoading, setUser, getCountries, findCountry, country, getUserPosts, userPosts, setUserPosts, buttonDisabled, setButtonDisabled, posts, setPosts, getPosts, singlePost, setSinglePost, getSinglePost, errorMessage, setTimedMessage, mapPosition }} >
+        <LoadingContext.Provider value={{ countries, user, isLoading, setIsLoading, setUser, getCountries, findCountry, country, getUserPosts, userPosts, setUserPosts, posts, setPosts, getPosts, singlePost, setSinglePost, getSinglePost, errorMessage, setTimedMessage, mapPosition }} >
             {children}
         </LoadingContext.Provider>
     )

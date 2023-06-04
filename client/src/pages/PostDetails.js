@@ -150,7 +150,7 @@ const PostDetails = () => {
     // }, [])
 
     useEffect(() => {
-        if (!singlePost || singlePost._id !== id) {
+        if (id !== singlePost?._id) {
          getSinglePost(posts, id)
         }
         

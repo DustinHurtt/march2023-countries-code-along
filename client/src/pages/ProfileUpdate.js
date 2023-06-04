@@ -13,13 +13,14 @@ import { fileChange } from '../services/fileChange'
 
 const ProfileUpdate = () => {
 
-    const { user, setUser, buttonDisabled, setButtonDisabled } = useContext(LoadingContext)
+    const { user, setUser } = useContext(LoadingContext)
 
     const { storeToken } = useContext(AuthContext)
 
     const navigate = useNavigate()
 
-    const [updatedUser, setUpdatedUser] = useState(null)
+    const [updatedUser, setUpdatedUser] = useState(user)
+    const [buttonDisabled, setButtonDisabled] = useState(false)
     // const [buttonDisabled, setButtonDisabled] = useState(false)
 
     const handleTextChange = (e) => {
@@ -71,7 +72,7 @@ const ProfileUpdate = () => {
         // if (user) {
             setUpdatedUser(user)
         // }
-    }, [user])    
+    }, [])    
 
 
   return (

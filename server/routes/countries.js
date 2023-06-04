@@ -31,28 +31,29 @@ router.post("/create", isAuthenticated, (req, res, next) => {
             console.log(err);
           });
 
-        return;
+      } else {
+
+          console.log("No Found Country");
+    
+          Country.create(req.body)
+          .then((createdCountry) => {
+            User.findByIdAndUpdate(
+              req.user._id,
+              {
+                $push: { visitedCountries: createdCountry._id },
+              },
+              { new: true }
+            )
+            .populate('visitedCountries')
+              .then((updatedUser) => {
+                res.json(updatedUser);
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          });
       }
 
-      console.log("No Found Country");
-
-      Country.create(req.body)
-      .then((createdCountry) => {
-        User.findByIdAndUpdate(
-          req.user._id,
-          {
-            $push: { visitedCountries: createdCountry._id },
-          },
-          { new: true }
-        )
-        .populate('visitedCountries')
-          .then((updatedUser) => {
-            res.json(updatedUser);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      });
     })
     .catch((err) => {
       console.log(err);

@@ -39,6 +39,7 @@ const CountryDetails = () => {
   };
 
   const addCountry = (thisCountry) => {
+    console.log("ID!!!!!!!", thisCountry._id)
     let addedCountry = {
         commonName: thisCountry.name.common,
         officialName: thisCountry.name.official,

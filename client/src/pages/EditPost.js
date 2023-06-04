@@ -8,13 +8,14 @@ import { fileChange } from '../services/fileChange'
 
 const EditPost = () => {
 
-    const { posts, userPosts, setPosts, setUserPosts, singlePost, setSinglePost, getSinglePost, buttonDisabled, setButtonDisabled, setTimedMessage } = useContext(LoadingContext)
+    const { posts, userPosts, setPosts, setUserPosts, singlePost, setSinglePost, getSinglePost, setTimedMessage } = useContext(LoadingContext)
 
     const { id } = useParams()
 
     const navigate = useNavigate()
 
     const [updatedPost, setUpdatedPost] = useState(null)
+    const [buttonDisabled, setButtonDisabled] = useState(false)
 
     const handleTextChange = (e) => {
         setUpdatedPost((prev) => ({...prev, [e.target.name]: e.target.value}))
