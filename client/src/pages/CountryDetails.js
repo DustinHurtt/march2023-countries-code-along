@@ -11,12 +11,16 @@ import "leaflet/dist/leaflet.css";
 
 import { LoadingContext } from "../context/loading.context";
 
+import { AuthContext } from '../context/auth.context'
+
 import { getImage } from "../services/countries";
 
 import { post } from "../services/authService";
 
 const CountryDetails = () => {
   const { countries, country, findCountry, getCountries, user, setUser } = useContext(LoadingContext);
+
+  const { storeToken } = useContext(AuthContext)
 
   const [mapPosition, setMapPosition] = useState(null);
 
@@ -54,7 +58,8 @@ const CountryDetails = () => {
     post('/countries/create', addedCountry)
         .then((results) => {
             console.log("add country results", results.data)
-            setUser(results.data)
+            setUser(results.data.user)
+            storeToken(results.data.authToken)
             navigate('/profile')
         })
         .catch((err) => {

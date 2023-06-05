@@ -1,6 +1,6 @@
 import { useContext, useState } from "react"
 
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import CreatableSelect from 'react-select/creatable'
 
@@ -12,7 +12,7 @@ import { post } from "../services/authService";
 
 const AddPost = () => {
 
-    const { user, posts, setPosts, getPosts } = useContext(LoadingContext)
+    const { user, posts, setPosts, getPosts, userPosts, setUserPosts } = useContext(LoadingContext)
 
     const navigate = useNavigate()
 
@@ -99,6 +99,11 @@ const AddPost = () => {
                 } else {
                     getPosts()
                 }
+                if (userPosts) {
+                    setUserPosts([results.data, ...userPosts])
+                } else {
+                    setUserPosts([results.data])
+                }
                          
             })
             .catch((err) => {
@@ -128,30 +133,37 @@ const AddPost = () => {
                     user.visitedCountries.length ? 
                     <>
                          <CreatableSelect id="selector" isClearable options={theseOptions} onChange={handleSelectChange}/>
+
+                         { newPost.country ? 
+
+                
+                            <form onSubmit={handleSubmit}>
+                                <label>Image</label>
+                                <input type="file" name='image' onChange={handleFileChange} />
+
+                                <label>Title</label>
+                                <input type="text" name='title' value={newPost.title} onChange={handleTextChange} />
+                                <label>Story</label>
+                                <textarea name='story' value={newPost.story} onChange={handleTextChange} />
+
+                                <button type='submit' disabled={buttonDisabled}>Submit Post</button>
+
+
+                            </form>
+
+                            : <p>Choose country...</p>
+                            }
                     </>
-                    : <p>No visited countries added</p>
+                    : <div>
+                    
+                        <p>No visited countries added</p>
+                        <Link to='/countries'>Add a country to create a post.</Link>
+                    
+                    </div>
                 }
 
                 {console.log("this is new post now", newPost)}
-                { newPost.country ? 
 
-                
-                <form onSubmit={handleSubmit}>
-                    <label>Image</label>
-                    <input type="file" name='image' onChange={handleFileChange} />
-
-                    <label>Title</label>
-                    <input type="text" name='title' value={newPost.title} onChange={handleTextChange} />
-                    <label>Story</label>
-                    <textarea name='story' value={newPost.story} onChange={handleTextChange} />
-
-                    <button type='submit' disabled={buttonDisabled}>Submit Post</button>
-
-
-                </form>
-
-                : <p>Choose country...</p>
-                }
 
 
             </div>
