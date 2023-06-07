@@ -1,5 +1,8 @@
-import { useContext, useEffect } from "react"
+import { useContext, useEffect, useState } from "react"
 import { Link } from 'react-router-dom'
+
+import CreatableSelect from 'react-select/creatable'
+
 import { LoadingContext } from "../context/loading.context"
 
 import { returnRelativeTime } from "../services/time"
@@ -7,6 +10,8 @@ import { returnRelativeTime } from "../services/time"
 const Posts = () => {
 
     const { user, posts, getPosts, setSinglePost, getSinglePost, setTimedMessage } = useContext(LoadingContext)
+
+    const [filterTerm, setFilterTerm] = useState('')
 
     const setPost = (id) => {
         let thisPost = posts.find((element) => element._id === id)
@@ -20,6 +25,36 @@ const Posts = () => {
         getSinglePost(posts, id)
     }
 
+    const sort = (array) => {
+        return array.sort((a, b) => a.country.commonName.localeCompare(b.country.commonName))
+    }
+
+    const visited = posts ? [...sort(posts)].map((country) => {
+        return { 
+            key: country._id,
+            label: country.country.commonName,
+            value: country.country.commonName   
+        }
+    }) : []
+
+    const theseOptions = posts ? visited : []
+
+    const handleSelectChange = (e) => {
+
+        console.log("Select change")
+
+        if (!e) {
+            setFilterTerm('')
+        } else {
+            setFilterTerm(e.value)
+            }
+
+        }
+
+
+    const filtered = filterTerm ? posts.filter((post) => post.country.commonName === filterTerm) : posts
+    
+
     useEffect(() => {
         if(!posts.length) {
             getPosts()
@@ -31,12 +66,16 @@ const Posts = () => {
     <div id="all-posts">
     <h1>Posts</h1>
 
+    <h3>Filter posts by country:</h3>
+
+    <CreatableSelect id="selector" isClearable options={theseOptions} onChange={handleSelectChange}/>
+
     {posts.length ? 
 
         <div id="all-posts-container">
 
             {
-               posts.map((post) => {
+               filtered.map((post) => {
 
                 return (
                     <Link to={`/posts/${post._id}`} id="all-posts-link" key={post._id} onClick={()=>handleClick(post._id)} >
@@ -63,11 +102,7 @@ const Posts = () => {
         : <p>Loading...</p>
     }
 
-
-    
-
-    
-    
+  
     </div>
   )
 }
