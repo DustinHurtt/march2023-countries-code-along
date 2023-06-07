@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 
 import CreatableSelect from 'react-select/creatable'
 
+import _ from 'lodash'
+
 import { LoadingContext } from "../context/loading.context"
 
 import { returnRelativeTime } from "../services/time"
@@ -30,14 +32,21 @@ const Posts = () => {
     }
 
     const visited = posts ? [...sort(posts)].map((country) => {
+        
         return { 
-            key: country._id,
             label: country.country.commonName,
             value: country.country.commonName   
         }
+
     }) : []
 
-    const theseOptions = posts ? visited : []
+    // .filter((value, index, array) => array.indexOf(value) === index)
+
+    console.log("Vistited", [...new Map(visited.map((country) => [country['value'], country])).values()])
+    console.log("Vistited 2", _.uniqWith(visited, _.isEqual))
+    
+
+    const theseOptions = posts ? _.uniqWith(visited, _.isEqual) : []
 
     const handleSelectChange = (e) => {
 
@@ -53,7 +62,7 @@ const Posts = () => {
 
 
     const filtered = filterTerm ? posts.filter((post) => post.country.commonName === filterTerm) : posts
-    
+
 
     useEffect(() => {
         if(!posts.length) {
