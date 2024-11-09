@@ -121,13 +121,11 @@ const CountryDetails = () => {
                 <p>
                   Currencies:
                   <span>
-                    {" "}
                     {Object.values(country.currencies)
                       .map((currency) => currency.name)
                       .join(" ")}
                   </span>
                   <span>
-                    {" "}
                     {Object.values(country.currencies)
                       .map((currency) => currency.symbol)
                       .join(", ")}

@@ -54,8 +54,7 @@ router.post('/signup', (req, res, next) => {
                 { algorithm: 'HS256', expiresIn: "6h" }
                 );
     
-            console.log("Signup line 57", payload)
-        
+    
             res.status(201).json( { authToken: authToken, user: payload });
             })
             .catch(err => {
@@ -138,8 +137,9 @@ router.post('/login', (req, res, next) => {
       .then((foundUser) => {
       
         if (!foundUser) {
+          console.log("No found user")
           // If the user is not found, send an error response
-          res.status(401).json({ message: "User not found." })
+          res.status(401).json({ message: "Email or Passowrd are incorrect." })
           return;
         }
    
@@ -184,5 +184,6 @@ router.get('/verify', isAuthenticated, (req, res, next) => {       // <== CREATE
     // previously set as the token payload
     res.status(200).json(req.user);
   });
+
 
 module.exports = router;

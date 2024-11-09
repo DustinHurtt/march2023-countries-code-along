@@ -1,4 +1,4 @@
-import { createContext, useState, useMemo, useCallback } from "react";
+import { createContext, useState} from "react";
 import { get } from "../services/authService";
 import axios from 'axios'
 
@@ -15,6 +15,8 @@ const LoadingProvider = ({ children }) => {
     const [singlePost, setSinglePost] = useState(null)
     const [errorMessage, setErrorMessage] = useState('')
     const [mapPosition, setMapPosition] = useState(null)
+    const [otherUser, setOtherUser] = useState(null)
+    const [otherUserPosts, setOtherUserPosts] = useState(null)
 
     const setTimedMessage = (newMessage) => {
         setErrorMessage(newMessage);

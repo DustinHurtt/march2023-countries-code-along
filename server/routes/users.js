@@ -22,7 +22,7 @@ router.get('/details/:id', (req, res, next) => {
 
 router.post('/update/:id', (req, res, next) => {
 
-  User.findByIdAndUpdate(req.params.id, req.body,{new: true})
+  User.findByIdAndUpdate(req.params.id, req.body, {new: true})
     .populate('visitedCountries')
     .then((updatedUser) => {
 
@@ -64,7 +64,7 @@ router.get('/posts/:id', (req, res, next) => {
     .then((foundPosts) => {
       res.json(foundPosts)
     })
-    .catcj((err) => {
+    .catch((err) => {
       console.log(err)
     })
 

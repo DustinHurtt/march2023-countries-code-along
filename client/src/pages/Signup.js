@@ -38,7 +38,7 @@ const Signup = () => {
                 navigate('/profile')
             })
             .catch((err) => {
-                console.log(err)
+                console.log("Error message=====>", err.data.message)
             })
 
     }

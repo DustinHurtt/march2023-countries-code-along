@@ -225,7 +225,7 @@ const PostDetails = () => {
           <p>
             Contributed by:{" "}
             <span>
-              <Link>{singlePost.author.fullName}</Link>
+              <Link to={`/contributor-profile/${singlePost.author._id}`}>{singlePost.author.fullName}</Link>
             </span>
           </p>
 

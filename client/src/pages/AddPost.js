@@ -27,7 +27,6 @@ const AddPost = () => {
 
     const handleTextChange = (e) => {
         setNewPost((prev) => ({...prev, [e.target.name]: e.target.value}))
-        console.log("Post changing", newPost)
     }
 
     const sort = (array) => {

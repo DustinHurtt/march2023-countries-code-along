@@ -83,6 +83,7 @@ router.post("/create", isAuthenticated, (req, res, next) => {
 });
 
 router.get('/detail/:name', (req, res, next) => {
+    console.log("params", req.params)
     Country.find({commonName: req.params.name})
         .then((foundCountry) => {
             res.json(foundCountry)

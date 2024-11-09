@@ -120,4 +120,17 @@ router.get('/delete/:id', (req, res, next) => {
 
 })
 
+router.get('/post', (req, res, next) => {
+  Post.find()
+  .populate('author')
+  .then((foundPosts) => {
+    console.log("these are the found posts")
+    res.json(foundPosts)
+  })
+  .catch((err) => {
+    console.log(err)
+    res.json(err)
+  })
+})
+
 module.exports = router;

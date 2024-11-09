@@ -79,6 +79,7 @@ const ProfileUpdate = () => {
     <div className="form">
         <h1>Profile Update</h1>
 
+
         {
             updatedUser ? 
 
@@ -95,6 +96,8 @@ const ProfileUpdate = () => {
 
             <label htmlFor="profilePic" >Profile Picture</label>
             <input id="profilePic" name='profilePic' type="file" onChange={handleFileChange} />
+
+            {/* phoneNumber */}
 
             <button type='submit' disabled={buttonDisabled}>Update Profile</button>
 

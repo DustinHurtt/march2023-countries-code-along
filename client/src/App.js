@@ -19,6 +19,7 @@ import Profile from './pages/Profile';
 import AddPost from './pages/AddPost';
 import ProfileUpdate from './pages/ProfileUpdate';
 import EditPost from './pages/EditPost'
+import UserProfile from './pages/UserProfile';
 
 
 function App() {
@@ -69,6 +70,7 @@ function App() {
            <Route path='/add-post' element={<AddPost />} />
            <Route path='/posts/:id' element={<PostDetails />} />
            <Route path='/edit-post/:id' element={<EditPost />} />
+           <Route path='/contributor-profile/:id' element={<UserProfile />}/>
 
          </Route>
 
