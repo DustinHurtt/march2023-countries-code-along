@@ -32,7 +32,7 @@ COPY . .
 FROM base
 
 # Copy built application
-COPY --from=build /bin/wwww
+COPY --from=build /bin/wwww /bin/wwww
 
 # Start the server by default, this can be overwritten at runtime
 EXPOSE 3000
